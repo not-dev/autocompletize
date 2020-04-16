@@ -20,7 +20,7 @@ module.exports = merge(common, {
     new CopyPlugin([
       {
         from: 'public',
-        ignore: []
+        ignore: ['*.ejs']
       }
     ])
   ]

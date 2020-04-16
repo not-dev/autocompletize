@@ -1,0 +1,66 @@
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Title</title>
+  <meta name="description" content="Description" />
+  <link rel="icon" href="">
+  <link rel="stylesheet" type="text/css" href="sample.css">
+  <link rel="stylesheet" type="text/css" href="loading.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="mod/autocomplete-7d6a384b38919683c3fa.min.js"></script><script src="mod/ekiapi-7d6a384b38919683c3fa.min.js"></script></head>
+
+<body>
+
+  <div class="container">
+    <form>
+      <h1>Form</h1>
+      <div class="form-group">
+        <input id="eki-input" type="text" autocomplete="off" />
+        <label for="eki-input" class="control-label">Station Name</label>
+      </div>
+      <div class="form-group">
+        <input type="text" autocomplete="off" />
+        <label class="control-label">Notes</label>
+      </div>
+    </form>
+    <div class="button-container">
+      <button id="submit" type="button" class="button">SUBMIT</button>
+    </div>
+  </div>
+  <div class="loading-wrapper">
+    <div class="sk-fading-circle">
+      <div class="sk-circle1 sk-circle"></div>
+      <div class="sk-circle2 sk-circle"></div>
+      <div class="sk-circle3 sk-circle"></div>
+      <div class="sk-circle4 sk-circle"></div>
+      <div class="sk-circle5 sk-circle"></div>
+      <div class="sk-circle6 sk-circle"></div>
+      <div class="sk-circle7 sk-circle"></div>
+      <div class="sk-circle8 sk-circle"></div>
+      <div class="sk-circle9 sk-circle"></div>
+      <div class="sk-circle10 sk-circle"></div>
+      <div class="sk-circle11 sk-circle"></div>
+      <div class="sk-circle12 sk-circle"></div>
+    </div>
+  </div>
+  <script src="./handler.js"></script>
+  <script>
+    const id = "eki-input"
+    $(window).on('load', () => {
+      $(".loading-wrapper").hide();
+      $('#submit').on('click', () => {
+        $(".loading-wrapper").show()
+        setTimeout(() => {
+          $(".loading-wrapper").fadeOut('fast', () => alert(
+            `\
+            ${$(`label[for=${id}]`).text()}: ${$(id).val() || '未入力'}
+            ${$('form label:eq(1)').text()}: ${$('form input:eq(1)').val() || '未入力'}`
+          ))
+        }, 1200)
+      })
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Title</title>
+  <meta name="description" content="Description" />
+  <link rel="icon" href="">
+  <script src="mod/autocomplete-7d6a384b38919683c3fa.min.js"></script>
+  <script src="mod/ekiapi-7d6a384b38919683c3fa.min.js"></script>
+  <script src="./handler.js"></script>
+</head>
+
+<body>
+  <div style="display: inline-flex;">
+    <input id="eki-input" type="text" autocomplete="off" />
+    <button onclick="alert(document.getElementById('eki-input').value || null)">submit</button>
+  </div>
+</body>
+
+</html>

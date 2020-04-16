@@ -1,8 +1,10 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: {
-    budle: './src/index.js'
+    autocomplete: './src/autocomplete_mod/index.ts',
+    ekiapi: './src/ekiapi_mod/index.ts'
   },
   resolve: {
     extensions: [
@@ -10,12 +12,10 @@ module.exports = {
     ]
   },
   output: {
-    filename: 'js/[name]-[hash].min.js',
-    path: `${__dirname}/build`
-    /*
+    filename: 'mod/[name]-[hash].min.js',
+    path: `${__dirname}/build`,
     library: '[name]',
     libraryTarget: 'umd'
-    */
   },
   module: {
     rules: [
@@ -29,10 +29,16 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: './public/index.ejs',
       filename: 'index.html',
+      inject: false,
+      minify: false
+    }),
+    new HtmlWebpackPlugin({
+      template: './public/sample.html',
+      filename: 'sample.html',
       inject: 'head',
       minify: false
     })
-  ],
+  ]
 }
