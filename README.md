@@ -1,8 +1,8 @@
-![top](https://github.com/not-dev/autocompletize/blob/master/assets/image.png?raw=true)
-
 # autocompletize
 
 Make autocomplete form from plain HTML text input form.
+
+![sample](https://github.com/not-dev/autocompletize/blob/master/assets/image.png?raw=true)
 
 ## Installation
 
