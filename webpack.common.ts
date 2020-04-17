@@ -1,3 +1,5 @@
+import { version } from './package.json'
+
 import webpack from 'webpack'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -13,7 +15,7 @@ const module: webpack.Configuration = {
     ]
   },
   output: {
-    filename: 'mod/[name].min.js',
+    filename: `mod/[name]-${version}.min.js`,
     path: `${__dirname}/build`,
     library: '[name]',
     libraryTarget: 'umd'
@@ -34,15 +36,13 @@ const module: webpack.Configuration = {
       filename: 'sample_minimum/index.html',
       chunks: ['autocompletize'],
       inject: 'head',
-      minify: false,
-      hash: true
+      minify: false
     }),
     new HtmlWebpackPlugin({
       template: './public/sample/index.ejs',
       filename: 'sample/index.html',
       inject: false,
-      minify: false,
-      hash: true
+      minify: false
     })
   ]
 }
