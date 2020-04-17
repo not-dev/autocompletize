@@ -1,10 +1,11 @@
-const merge = require('webpack-merge')
-const common = require('./webpack.common.js')
+import webpack from 'webpack'
+import merge from 'webpack-merge'
+import common from './webpack.common'
 
-const CopyPlugin = require('copy-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
+import CopyPlugin from 'copy-webpack-plugin'
+import TerserPlugin from 'terser-webpack-plugin'
 
-module.exports = merge(common, {
+const module: webpack.Configuration = merge(common, {
   mode: 'production',
   optimization: {
     minimizer: [
@@ -31,3 +32,5 @@ module.exports = merge(common, {
     ])
   ]
 })
+
+export default module

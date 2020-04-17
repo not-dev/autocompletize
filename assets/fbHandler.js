@@ -14,7 +14,7 @@ fb.events.form.mounted = [function (state) {
     for (const node of nodes.children) {
       if (node.tagName === 'INPUT') {
         node.id = 'dep1'
-        node.addEventListener('input', (e) => {
+        node.addEventListener('input', () => {
           ekiapi.get(process.env.ekiApiKey, node, autocomplete.update)
         })
       } else {

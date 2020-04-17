@@ -10,7 +10,7 @@ const process = {
 /* input changed event => api called => autocomplete updated */
 window.addEventListener('load', () => {
   const target = document.getElementById('eki-input')
-  target.addEventListener('input', (e) => ekiapi.get(process.env.ekiApiKey, target, autocomplete.update))
+  target.addEventListener('input', () => ekiapi.get(process.env.ekiApiKey, target, autocomplete.update))
 })
 
 /* with jquery sample */

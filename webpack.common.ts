@@ -1,7 +1,8 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+import webpack from 'webpack'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 
-module.exports = {
+const module: webpack.Configuration = {
   entry: {
     autocomplete: './src/autocomplete/index.ts',
     ekiapi: './src/ekiapi/index.ts'
@@ -43,3 +44,5 @@ module.exports = {
     })
   ]
 }
+
+export default module
