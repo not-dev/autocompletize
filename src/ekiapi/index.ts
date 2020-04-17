@@ -1,4 +1,4 @@
-import { getEkiList } from './ekiapi'
+import { getEkiList } from './main'
 
 interface Response {
   target: HTMLInputElement;

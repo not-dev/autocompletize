@@ -8,8 +8,12 @@
     "emotion": "^10.0.27"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.27.0",
-    "@typescript-eslint/parser": "^2.27.0",
+    "@types/copy-webpack-plugin": "^5.0.0",
+    "@types/terser-webpack-plugin": "^2.2.0",
+    "@types/webpack-dev-server": "^3.10.1",
+    "@types/webpack-merge": "^4.1.5",
+    "@typescript-eslint/eslint-plugin": "^2.28.0",
+    "@typescript-eslint/parser": "^2.28.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
     "eslint": "^6.8.0",
@@ -21,6 +25,7 @@
     "html-webpack-plugin": "^4.2.0",
     "terser-webpack-plugin": "^2.3.5",
     "ts-loader": "^6.2.2",
+    "ts-node": "^8.8.2",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
@@ -29,9 +34,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.prod.js",
-    "start": "webpack-dev-server --config webpack.dev.js"
-  },
-  "author": "",
-  "license": "ISC"
+    "build": "webpack --config webpack.prod.ts",
+    "start": "webpack-dev-server --config webpack.dev.ts"
+  }
 }
