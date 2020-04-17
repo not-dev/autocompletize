@@ -3,8 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: {
-    autocomplete: './src/autocomplete_mod/index.ts',
-    ekiapi: './src/ekiapi_mod/index.ts'
+    autocomplete: './src/autocomplete/index.ts',
+    ekiapi: './src/ekiapi/index.ts'
   },
   resolve: {
     extensions: [
@@ -12,7 +12,7 @@ module.exports = {
     ]
   },
   output: {
-    filename: 'mod/[name]-[hash].min.js',
+    filename: 'mod/[name].min.js',
     path: `${__dirname}/build`,
     library: '[name]',
     libraryTarget: 'umd'
@@ -29,15 +29,16 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/index.ejs',
-      filename: 'index.html',
-      inject: false,
+      template: './public/sample_minimum/index.html',
+      filename: 'sample_minimum/index.html',
+      chunks: ['autocomplete'],
+      inject: 'head',
       minify: false
     }),
     new HtmlWebpackPlugin({
-      template: './public/sample.html',
-      filename: 'sample.html',
-      inject: 'head',
+      template: './public/sample/index.ejs',
+      filename: 'sample/index.html',
+      inject: false,
       minify: false
     })
   ]

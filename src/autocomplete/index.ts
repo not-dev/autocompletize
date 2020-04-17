@@ -1,4 +1,4 @@
-import autocomplete from './autocomplete'
+import autocomplete from './main'
 
 interface AutocompleteDatalist {
   target: HTMLInputElement;

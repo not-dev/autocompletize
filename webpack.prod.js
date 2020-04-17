@@ -9,7 +9,7 @@ module.exports = merge(common, {
   optimization: {
     minimizer: [
       new TerserPlugin({
-        extractComments: true,
+        extractComments: false,
         terserOptions: {
           compress: { drop_console: true }
         }
@@ -20,7 +20,13 @@ module.exports = merge(common, {
     new CopyPlugin([
       {
         from: 'public',
-        ignore: ['*.ejs']
+        ignore: ['**/*.ejs']
+      },
+      {
+        from: 'README.md'
+      },
+      {
+        from: 'README_JP.md'
       }
     ])
   ]

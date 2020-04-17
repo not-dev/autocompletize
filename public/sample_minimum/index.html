@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>
+  <input id="input" type="text" autocomplete="off" />
+  <script>
+    const target = document.getElementById('input')
+    const data = ['fish', 'chicken', 'beef', 'pork', 'cheese', 'patties', 'pickles']
+    target.addEventListener('focus', () => autocomplete.update({ target: target, data: data }))
+  </script>
+</body>
+
+</html>
