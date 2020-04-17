@@ -1,3 +1,5 @@
+English / [Japanese](./README_JP.md)
+
 # autocompletize
 
 Make autocomplete form from plain HTML text input form.
@@ -16,7 +18,7 @@ Download from release and place in your directory.
 
 See the sample in the release.
 
-(Sorry, I will write in detail later.)
+(More details in the README_JP.md)
 
 ```html
 ...
