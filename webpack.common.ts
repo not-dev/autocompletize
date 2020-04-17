@@ -4,7 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 
 const module: webpack.Configuration = {
   entry: {
-    autocomplete: './src/autocomplete/index.ts',
+    autocompletize: './src/autocompletize/index.ts',
     ekiapi: './src/ekiapi/index.ts'
   },
   resolve: {
@@ -32,7 +32,7 @@ const module: webpack.Configuration = {
     new HtmlWebpackPlugin({
       template: './public/sample_minimum/index.html',
       filename: 'sample_minimum/index.html',
-      chunks: ['autocomplete'],
+      chunks: ['autocompletize'],
       inject: 'head',
       minify: false,
       hash: true

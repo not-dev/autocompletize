@@ -1,4 +1,4 @@
-/* global ekiapi, autocomplete */
+/* global ekiapi, autocompletize */
 /* global fb */
 
 const process = {
@@ -15,7 +15,7 @@ fb.events.form.mounted = [function (state) {
       if (node.tagName === 'INPUT') {
         node.id = 'dep1'
         node.addEventListener('input', () => {
-          ekiapi.get(process.env.ekiApiKey, node, autocomplete.update)
+          ekiapi.get(process.env.ekiApiKey, node, autocompletize.update)
         })
       } else {
         getChildren(node)

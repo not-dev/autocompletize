@@ -1,4 +1,4 @@
-/* global ekiapi, autocomplete */
+/* global ekiapi, autocompletize */
 /* global $ */
 
 const process = {
@@ -7,10 +7,10 @@ const process = {
   }
 }
 
-/* input changed event => api called => autocomplete updated */
+/* input changed event => api called => autocompletize updated */
 window.addEventListener('load', () => {
   const target = document.getElementById('eki-input')
-  target.addEventListener('input', () => ekiapi.get(process.env.ekiApiKey, target, autocomplete.update))
+  target.addEventListener('input', () => ekiapi.get(process.env.ekiApiKey, target, autocompletize.update))
 })
 
 /* with jquery sample */

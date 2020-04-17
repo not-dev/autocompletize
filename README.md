@@ -10,7 +10,7 @@ Make autocomplete form from plain HTML text input form.
 
 Download from release and place in your directory.
 
-* mod/autocomplete~.min.js: This module
+* mod/autocompletize~.min.js: This module
 * mod/ekiapi~.min.js: Get a list of station names by using by 駅すぱあとAPI (for sample)
 * others: Samples
 
@@ -22,14 +22,14 @@ See the sample in the release.
 
 ```html
 <head>
-<script src="mod/autocomplete.min.js"></script>
+<script src="mod/autocompletize.min.js"></script>
 </head>
 <body>
-  <input id="input" type="text" autocomplete="off" />
+  <input id="input" type="text" autocompletize="off" />
   <script>
     const target = document.getElementById('input')
     const data = ['fish', 'chicken', 'beef', 'pork', 'cheese', 'patties', 'pickles']
-    target.addEventListener('focus', () => autocomplete.update({ target: target, data: data }))
+    target.addEventListener('focus', () => autocompletize.update({ target: target, data: data }))
   </script>
 </body>
 ```

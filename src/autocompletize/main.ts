@@ -2,7 +2,7 @@
 
 import { css } from 'emotion' /* MIT LICENSE */
 
-interface AutocompleteDatalist {
+interface autocompletizeDatalist {
   target: HTMLInputElement;
   data: Array<string>;
 }
@@ -58,7 +58,7 @@ const closeState = css({
   }
 })
 
-const autocomplete = {
+const autocompletize = {
   state: -1,
   shift: false,
   init: () => {
@@ -78,14 +78,14 @@ const autocomplete = {
       })
       input.addEventListener('keyup', (e:KeyboardEvent) => {
         if (e.key === 'Shift') {
-          autocomplete.shift = false
+          autocompletize.shift = false
         }
       })
       input.addEventListener('keydown', (e:KeyboardEvent) => {
         const selectDown = () => {
           if (input.nextElementSibling) {
             e.preventDefault()
-            let state = autocomplete.state
+            let state = autocompletize.state
             const listItems = input.nextElementSibling.children
             if (state > -1) { listItems[state].classList.remove('active') }
             const length = listItems.length
@@ -96,13 +96,13 @@ const autocomplete = {
               inline: 'nearest'
             })
             listItems[state].classList.add('active')
-            autocomplete.state = state
+            autocompletize.state = state
           }
         }
         const selectUp = () => {
           if (input.nextElementSibling) {
             e.preventDefault()
-            let state = autocomplete.state
+            let state = autocompletize.state
             const listItems = input.nextElementSibling.children
             if (state > -1) { listItems[state].classList.remove('active') }
             const length = listItems.length
@@ -113,46 +113,46 @@ const autocomplete = {
               inline: 'nearest'
             })
             listItems[state].classList.add('active')
-            autocomplete.state = state
+            autocompletize.state = state
           }
         }
         if (e.key === 'Shift') {
-          autocomplete.shift = true
+          autocompletize.shift = true
         }
         if (e.key === 'ArrowDown') {
           console.log(e.key)
           selectDown()
-          console.log(autocomplete.state)
+          console.log(autocompletize.state)
         } else if (e.key === 'ArrowUp') {
           console.log(e.key)
           selectUp()
-          console.log(autocomplete.state)
+          console.log(autocompletize.state)
         } else if (e.key === 'Tab') {
           console.log(e.key)
-          if (autocomplete.shift) {
+          if (autocompletize.shift) {
             console.log('&Shift')
             selectUp()
           } else {
             selectDown()
           }
-          console.log(autocomplete.state)
+          console.log(autocompletize.state)
         } else if (e.key === 'Enter') {
           console.log(e.key)
           if (input.nextElementSibling) {
-            input.value = input.nextElementSibling.children[autocomplete.state].innerHTML
-            autocomplete.state = -1
-            autocomplete.clear(input)
+            input.value = input.nextElementSibling.children[autocompletize.state].innerHTML
+            autocompletize.state = -1
+            autocompletize.clear(input)
           }
-          console.log(autocomplete.state)
+          console.log(autocompletize.state)
         } else if (e.key === 'Escape') {
           console.log(e.key)
           if (input.nextElementSibling) {
-            autocomplete.state = -1
+            autocompletize.state = -1
             input.value = ''
             input.blur()
-            autocomplete.clear(input)
+            autocompletize.clear(input)
           }
-          console.log(autocomplete.state)
+          console.log(autocompletize.state)
         }
       })
     }
@@ -161,8 +161,8 @@ const autocomplete = {
     const listBox = target.nextElementSibling
     if (listBox) { listBox.remove() }
   },
-  update: ({ target, data = [] }:AutocompleteDatalist) => {
-    autocomplete.clear(target)
+  update: ({ target, data = [] }:autocompletizeDatalist) => {
+    autocompletize.clear(target)
     if (data.length) {
       const inputWrapper = target.parentNode
       if (inputWrapper) {
@@ -181,13 +181,13 @@ const autocomplete = {
         }
       }
     } else {
-      autocomplete.clear(target)
+      autocompletize.clear(target)
     }
   }
 }
 
 window.addEventListener('load', () => {
-  autocomplete.init()
+  autocompletize.init()
 })
 
-export default autocomplete
+export default autocompletize
