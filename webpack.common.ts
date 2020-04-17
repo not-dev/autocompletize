@@ -34,13 +34,15 @@ const module: webpack.Configuration = {
       filename: 'sample_minimum/index.html',
       chunks: ['autocomplete'],
       inject: 'head',
-      minify: false
+      minify: false,
+      hash: true
     }),
     new HtmlWebpackPlugin({
       template: './public/sample/index.ejs',
       filename: 'sample/index.html',
       inject: false,
-      minify: false
+      minify: false,
+      hash: true
     })
   ]
 }

@@ -11,8 +11,8 @@ Make autocomplete form from plain HTML text input form.
 Download from release and place in your directory.
 
 * mod/autocomplete~.min.js: This module
-* mod/ekiapi~.min.js: Get a list of station names by using by 駅すぱあとAPI
-* others: Sample
+* mod/ekiapi~.min.js: Get a list of station names by using by 駅すぱあとAPI (for sample)
+* others: Samples
 
 ## Usage
 
@@ -21,22 +21,17 @@ See the sample in the release.
 (More details in the README_JP.md)
 
 ```html
-...
-
+<head>
 <script src="mod/autocomplete.min.js"></script>
-<script>
-  window.addEventListener('load', () => {
-    const target = document.getElementById('target-id')
-    const data = ['hoge','hoge']
-    autocomplete.update({ target, data })
-  })
-</script>
-...
-
-<input id="target-id" type="text" autocomplete="off" />
-
-...
-
+</head>
+<body>
+  <input id="input" type="text" autocomplete="off" />
+  <script>
+    const target = document.getElementById('input')
+    const data = ['fish', 'chicken', 'beef', 'pork', 'cheese', 'patties', 'pickles']
+    target.addEventListener('focus', () => autocomplete.update({ target: target, data: data }))
+  </script>
+</body>
 ```
 
 ## License
