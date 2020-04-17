@@ -1,4 +1,4 @@
-English / [Japanese](./README_JP.md)
+English / [日本語](./README_JP.md)
 
 # autocompletize
 
@@ -18,7 +18,7 @@ Download from release and place in your directory.
 
 See the sample in the release.
 
-(More details in the README_JP.md)
+(More details in the [Japanese](README_JP.md))
 
 ```html
 <head>
