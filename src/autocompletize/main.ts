@@ -63,6 +63,42 @@ const autocompletize = {
   shift: false,
   init: () => {
     const inputs = document.getElementsByTagName('input')
+    const selectDown = (e:KeyboardEvent) => {
+      const input = <HTMLInputElement>e.target
+      if (input && input.nextElementSibling) {
+        e.preventDefault()
+        let state = autocompletize.state
+        const listItems = input.nextElementSibling.children
+        if (state > -1) { listItems[state].classList.remove('active') }
+        const length = listItems.length
+        state = (state === length - 1) ? 0 : state + 1
+        listItems[state].scrollIntoView({
+          behavior: 'auto',
+          block: 'nearest',
+          inline: 'nearest'
+        })
+        listItems[state].classList.add('active')
+        autocompletize.state = state
+      }
+    }
+    const selectUp = (e:KeyboardEvent) => {
+      const input = <HTMLInputElement>e.target
+      if (input && input.nextElementSibling) {
+        e.preventDefault()
+        let state = autocompletize.state
+        const listItems = input.nextElementSibling.children
+        if (state > -1) { listItems[state].classList.remove('active') }
+        const length = listItems.length
+        state = (state === 0) ? length - 1 : state - 1
+        listItems[state].scrollIntoView({
+          behavior: 'auto',
+          block: 'nearest',
+          inline: 'nearest'
+        })
+        listItems[state].classList.add('active')
+        autocompletize.state = state
+      }
+    }
     for (const input of Array.from(inputs)) {
       const inputWrapper = document.createElement('div')
       inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
@@ -72,7 +108,7 @@ const autocompletize = {
       parent.insertBefore(inputWrapper, input)
       inputWrapper.appendChild(input)
       document.documentElement.addEventListener('click', (e:MouseEvent) => {
-        (e.target as HTMLElement).parentNode === inputWrapper
+        (<HTMLElement>e.target).parentNode === inputWrapper
           ? input.classList.remove(closeState)
           : input.classList.add(closeState)
       })
@@ -82,63 +118,29 @@ const autocompletize = {
         }
       })
       input.addEventListener('keydown', (e:KeyboardEvent) => {
-        const selectDown = () => {
-          if (input.nextElementSibling) {
-            e.preventDefault()
-            let state = autocompletize.state
-            const listItems = input.nextElementSibling.children
-            if (state > -1) { listItems[state].classList.remove('active') }
-            const length = listItems.length
-            state = (state === length - 1) ? 0 : state + 1
-            listItems[state].scrollIntoView({
-              behavior: 'auto',
-              block: 'nearest',
-              inline: 'nearest'
-            })
-            listItems[state].classList.add('active')
-            autocompletize.state = state
-          }
-        }
-        const selectUp = () => {
-          if (input.nextElementSibling) {
-            e.preventDefault()
-            let state = autocompletize.state
-            const listItems = input.nextElementSibling.children
-            if (state > -1) { listItems[state].classList.remove('active') }
-            const length = listItems.length
-            state = (state === 0) ? length - 1 : state - 1
-            listItems[state].scrollIntoView({
-              behavior: 'auto',
-              block: 'nearest',
-              inline: 'nearest'
-            })
-            listItems[state].classList.add('active')
-            autocompletize.state = state
-          }
-        }
         if (e.key === 'Shift') {
           autocompletize.shift = true
         }
         if (e.key === 'ArrowDown') {
           console.log(e.key)
-          selectDown()
+          selectDown(e)
           console.log(autocompletize.state)
         } else if (e.key === 'ArrowUp') {
           console.log(e.key)
-          selectUp()
+          selectUp(e)
           console.log(autocompletize.state)
         } else if (e.key === 'Tab') {
           console.log(e.key)
           if (autocompletize.shift) {
             console.log('&Shift')
-            selectUp()
+            selectUp(e)
           } else {
-            selectDown()
+            selectDown(e)
           }
           console.log(autocompletize.state)
         } else if (e.key === 'Enter') {
           console.log(e.key)
-          if (input.nextElementSibling) {
+          if (input.nextElementSibling && autocompletize.state !== -1) {
             input.value = input.nextElementSibling.children[autocompletize.state].innerHTML
             autocompletize.state = -1
             autocompletize.clear(input)
@@ -148,9 +150,8 @@ const autocompletize = {
           console.log(e.key)
           if (input.nextElementSibling) {
             autocompletize.state = -1
-            input.value = ''
+            input.classList.add(closeState)
             input.blur()
-            autocompletize.clear(input)
           }
           console.log(autocompletize.state)
         }

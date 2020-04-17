@@ -11,6 +11,7 @@ const process = {
 window.addEventListener('load', () => {
   const target = document.getElementById('eki-input')
   target.addEventListener('input', () => ekiapi.get(process.env.ekiApiKey, target, autocompletize.update))
+  target.addEventListener('focus', () => ekiapi.get(process.env.ekiApiKey, target, autocompletize.update))
 })
 
 /* with jquery sample */
