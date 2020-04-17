@@ -8,9 +8,7 @@ interface AutocompleteDatalist {
 }
 
 const wrapperStyles = css({
-  position: 'relative',
-  display: 'block',
-  width: '100%'
+  position: 'relative'
 })
 
 const listBoxStyles = css({
@@ -67,8 +65,9 @@ const autocomplete = {
     const inputs = document.getElementsByTagName('input')
     for (const input of Array.from(inputs)) {
       const inputWrapper = document.createElement('div')
-      inputWrapper.classList.add(wrapperStyles)
       inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
+      inputWrapper.classList.add(wrapperStyles)
+      inputWrapper.setAttribute('style', `width:${input.clientWidth}px`)
       const parent = input.parentNode ? input.parentNode : document.body
       parent.insertBefore(inputWrapper, input)
       inputWrapper.appendChild(input)
