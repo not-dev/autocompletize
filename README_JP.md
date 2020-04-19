@@ -17,7 +17,9 @@ Releaseからautocompletize.zipをダウンロードして、解凍して自分�
 
 ## 使用方法
 
-1. autocompletize~.min.jsをimportします
+### オートコンプリートの内容固定の場合
+
+1. autocompletize~.min.jsを読み込みます
 1. autocompletize.update({ target, data})の形でオートコンプリートに表示するデータを渡します
 1. targetはHTMLInputElement, dataはArray\<string>です
 
@@ -35,7 +37,20 @@ Releaseからautocompletize.zipをダウンロードして、解凍して自分�
 </body>
 ```
 
-* データを入力に合わせて更新する場合は、フォームのinputイベントに対して、入力 >> API検索 >> 結果をautocompletize.updateで反映という流れで更新できます(sample参照)
+### 入力に合わせてデータを更新したい場合
+
+1. フォームのinputイベントに対して、入力を取得します
+1. 取得した入力から表示したいデータを生成します(例えば入力 >> API検索 >> 結果のリストを表示)
+1. autocompletize.update({ target, data})の形でオートコンプリートを更新します
+
+```javascript
+const target = document.getElementById('input')
+axios.get(url, data)
+  .then(res => {
+    const obj = JSON.parse((JSON.stringify(res.data)))
+    autocompletize.update({ target: target, data: obj.hoge })
+  })
+```
 
 ## ライセンス
 

@@ -1,8 +1,9 @@
 {
-  "name": "ekiname",
+  "name": "autocompletize",
   "version": "0.3.3",
   "description": "",
-  "main": "index.js",
+  "license": "MIT",
+  "repository": {},
   "dependencies": {
     "axios": "^0.19.2",
     "emotion": "^10.0.27"
@@ -31,6 +32,9 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.2"
+  },
+  "optionalDependencies": {
+    "fsevents": "*"
   },
   "scripts": {
     "test": "echo \"no test specified\"",
