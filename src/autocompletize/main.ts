@@ -103,7 +103,7 @@ const autocompletize = {
       const inputWrapper = document.createElement('div')
       inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
       inputWrapper.classList.add(wrapperStyles)
-      inputWrapper.setAttribute('style', `width:${input.clientWidth}px`)
+      // inputWrapper.setAttribute('style', `width:${input.clientWidth}px`)
       const parent = input.parentNode ? input.parentNode : document.body
       parent.insertBefore(inputWrapper, input)
       inputWrapper.appendChild(input)
