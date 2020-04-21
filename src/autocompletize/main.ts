@@ -1,6 +1,14 @@
 /*! Be licensed under the terms of the MIT license. */
 
-import { css } from 'emotion' /* MIT LICENSE */
+import { css } from 'emotion' /*! MIT LICENSE */
+
+const asyncFunc = (func:(...args:any) => any) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve)
+  })
+    .then(func)
+    .catch(err => console.error(err))
+}
 
 const wrapperStyles = css({
   position: 'relative',
@@ -75,7 +83,7 @@ class Form {
     if (listBox) { listBox.remove() }
   }
   initSync (){
-    console.log('initializing')
+    console.log('initializing: ',this.target)
     const input = this.target
     const selectDown = (e:KeyboardEvent) => {
       if (input && input.nextElementSibling) {
@@ -116,7 +124,7 @@ class Form {
     /* resizeObserver */
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
-        console.log(`resizeP: ${entry.target.outerHTML}`)
+        console.log('resize: ',entry.target)
         inputWrapper.removeAttribute('style')
         inputWrapper.setAttribute('style', `width:${(input as HTMLInputElement).offsetWidth}px`)
       }
@@ -172,12 +180,10 @@ class Form {
         console.log(this.selected)
       }
     })
-    console.log('initialized')
+    console.log('initialized: ',this.target)
   }
   init (){
-    return new Promise((resolve) => {
-      window.setTimeout(() => resolve(this.initSync()))
-    })
+    asyncFunc(() => this.initSync())
   }
   updateSync (data:Array<string>){
     this.clear()
@@ -204,29 +210,29 @@ class Form {
     }
   }
   update (data:Array<string>){
-    return new Promise((resolve) => {
-      window.setTimeout(() => resolve(this.updateSync(data)))
-    })
+    asyncFunc(() => this.updateSync(data))
   }
   observe ():Promise<string>{
-    const input = this.target
     return new Promise((resolve) => {
+      const input = this.target
       const prevValue = input.value
       if (this.timeId){
         window.clearTimeout(this.timeId)
         this.timeId = 0
       }
       this.timeId = window.setInterval(() => {
-        console.log('observer:', this.timeId)
+        // console.log('observer:', this.timeId)
         if (input.value !== prevValue) {
           window.clearTimeout(this.timeId)
           resolve(input.value)
         }
-      }, 1000)
+      }, 600)
     })
   }
-  changed (func:(res:string) => void){
-    this.observe().then((res) => func(res)).then(() => this.changed(func))
+  async changed (func:(res?: string) => void){
+    const res = await this.observe().catch(err => {throw new Error(err)})
+    await asyncFunc(() => func(res))
+    this.changed(func)
   }
 }
 

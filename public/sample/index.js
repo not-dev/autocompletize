@@ -7,27 +7,28 @@ const process = {
 }
 
 window.addEventListener('load', () => {
-  const forms = {}
-  for (const input of ['eki-input', 'eki-input2']) {
+  const inputs = ['eki-from', 'eki-to']
+  inputs.map((input) => {
     const target = document.getElementById(input)
-    forms[input] = new autocompletize.Form(target)
-    // form.changed((res) => console.log(res))
-    target.addEventListener('input', async () => {
-      const res = await ekiapi.get(process.env.ekiApiKey, target)
-      forms[input].update(res)
-      console.log(forms)
+    const form = new autocompletize.Form(target)
+    form.changed((res) => console.log(res))
+    target.addEventListener('input', () => {
+      ekiapi.get(process.env.ekiApiKey, target)
+        .then(res => form.update(res))
+        .catch(err => console.error(err))
     })
     target.addEventListener('focus', () => {
       ekiapi.get(process.env.ekiApiKey, target)
-        .then((res) => forms[input].update(res))
+        .then(res => form.update(res))
+        .catch(err => console.error(err))
     })
-  }
+  })
   const submit = document.getElementById('submit')
   submit.addEventListener('click', () => {
     alert(`
-    Station Name: ${document.getElementById('eki-input').value || '未入力'}
+    Station From: ${document.getElementById('eki-from').value || '未入力'}
+    Station To: ${document.getElementById('eki-to').value || '未入力'}
     Notes: ${document.getElementsByTagName('input')[1].value || '未入力'}`
     )
-    console.log(forms)
   })
 })
