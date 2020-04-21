@@ -32,7 +32,7 @@ const module: webpack.Configuration = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/sample_minimum/index.html',
+      template: './public/sample_minimum/check.html',
       filename: 'sample_minimum/index.html',
       chunks: ['autocompletize'],
       inject: 'head',

@@ -8,7 +8,10 @@ interface autocompletizeDatalist {
 }
 
 const wrapperStyles = css({
-  position: 'relative'
+  position: 'relative',
+  '& *': {
+    boxSizing: 'border-box'
+  }
 })
 
 const listBoxStyles = css({
@@ -62,7 +65,7 @@ const autocompletize = {
   state: -1,
   shift: false,
   init: () => {
-    const inputs = document.getElementsByTagName('input')
+    console.log('initializing')
     const selectDown = (e:KeyboardEvent) => {
       const input = <HTMLInputElement>e.target
       if (input && input.nextElementSibling) {
@@ -99,64 +102,76 @@ const autocompletize = {
         autocompletize.state = state
       }
     }
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        console.log(`resize: ${entry.target.outerHTML}`)
+        const parent = entry.target.parentElement
+        parent && parent.setAttribute('style', `width:${(entry.target as HTMLInputElement).offsetWidth}px`)
+      }
+    })
+    const inputs = document.getElementsByTagName('input')
     for (const input of Array.from(inputs)) {
-      const inputWrapper = document.createElement('div')
-      inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
-      inputWrapper.classList.add(wrapperStyles)
-      // inputWrapper.setAttribute('style', `width:${input.clientWidth}px`)
-      const parent = input.parentNode ? input.parentNode : document.body
-      parent.insertBefore(inputWrapper, input)
-      inputWrapper.appendChild(input)
-      document.documentElement.addEventListener('click', (e:MouseEvent) => {
-        (<HTMLElement>e.target).parentNode === inputWrapper
-          ? input.classList.remove(closeState)
-          : input.classList.add(closeState)
-      })
-      input.addEventListener('keyup', (e:KeyboardEvent) => {
-        if (e.key === 'Shift') {
-          autocompletize.shift = false
-        }
-      })
-      input.addEventListener('keydown', (e:KeyboardEvent) => {
-        if (e.key === 'Shift') {
-          autocompletize.shift = true
-        }
-        if (e.key === 'ArrowDown') {
-          console.log(e.key)
-          selectDown(e)
-          console.log(autocompletize.state)
-        } else if (e.key === 'ArrowUp') {
-          console.log(e.key)
-          selectUp(e)
-          console.log(autocompletize.state)
-        } else if (e.key === 'Tab') {
-          console.log(e.key)
-          if (autocompletize.shift) {
-            console.log('&Shift')
-            selectUp(e)
-          } else {
+      if (input.type === 'text') {
+        const inputWrapper = document.createElement('div')
+        inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
+        inputWrapper.classList.add(wrapperStyles)
+        inputWrapper.setAttribute('style', `width:${input.clientWidth}px`)
+        const parent = input.parentNode ? input.parentNode : document.body
+        parent.insertBefore(inputWrapper, input)
+        inputWrapper.appendChild(input)
+        document.documentElement.addEventListener('click', (e:MouseEvent) => {
+          (<HTMLElement>e.target).parentNode === inputWrapper
+            ? input.classList.remove(closeState)
+            : input.classList.add(closeState)
+        })
+        resizeObserver.observe(input)
+        input.addEventListener('keyup', (e:KeyboardEvent) => {
+          if (e.key === 'Shift') {
+            autocompletize.shift = false
+          }
+        })
+        input.addEventListener('keydown', (e:KeyboardEvent) => {
+          if (e.key === 'Shift') {
+            autocompletize.shift = true
+          }
+          if (e.key === 'ArrowDown') {
+            console.log(e.key)
             selectDown(e)
+            console.log(autocompletize.state)
+          } else if (e.key === 'ArrowUp') {
+            console.log(e.key)
+            selectUp(e)
+            console.log(autocompletize.state)
+          } else if (e.key === 'Tab') {
+            console.log(e.key)
+            if (autocompletize.shift) {
+              console.log('&Shift')
+              selectUp(e)
+            } else {
+              selectDown(e)
+            }
+            console.log(autocompletize.state)
+          } else if (e.key === 'Enter') {
+            console.log(e.key)
+            if (input.nextElementSibling && autocompletize.state !== -1) {
+              input.value = input.nextElementSibling.children[autocompletize.state].innerHTML
+              autocompletize.state = -1
+              autocompletize.clear(input)
+            }
+            console.log(autocompletize.state)
+          } else if (e.key === 'Escape') {
+            console.log(e.key)
+            if (input.nextElementSibling) {
+              autocompletize.state = -1
+              input.classList.add(closeState)
+              input.blur()
+            }
+            console.log(autocompletize.state)
           }
-          console.log(autocompletize.state)
-        } else if (e.key === 'Enter') {
-          console.log(e.key)
-          if (input.nextElementSibling && autocompletize.state !== -1) {
-            input.value = input.nextElementSibling.children[autocompletize.state].innerHTML
-            autocompletize.state = -1
-            autocompletize.clear(input)
-          }
-          console.log(autocompletize.state)
-        } else if (e.key === 'Escape') {
-          console.log(e.key)
-          if (input.nextElementSibling) {
-            autocompletize.state = -1
-            input.classList.add(closeState)
-            input.blur()
-          }
-          console.log(autocompletize.state)
-        }
-      })
+        })
+      }
     }
+    console.log('initialized')
   },
   clear: (target:HTMLInputElement) => {
     const listBox = target.nextElementSibling
