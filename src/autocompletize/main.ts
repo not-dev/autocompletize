@@ -116,7 +116,7 @@ class Form {
       }
     }
     const inputWrapper = document.createElement('div')
-    inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
+    inputWrapper.id = `${input.id || input.name || Math.random().toString(32).substring(2)}-wrapper`
     inputWrapper.classList.add(wrapperStyles)
     const parent = input.parentNode ? input.parentNode : document.body
     parent.insertBefore(inputWrapper, input)
@@ -192,7 +192,7 @@ class Form {
       const inputWrapper = input.parentNode
       if (inputWrapper) {
         const listBox = document.createElement('div')
-        listBox.id = (input.id || input.name) && `${input.id || input.name}-listBox`
+        listBox.id = `${input.id || input.name || Math.random().toString(32).substring(2)}-listBox`
         listBox.classList.add(listBoxStyles)
         inputWrapper.appendChild(listBox)
         for (const item of data) {
