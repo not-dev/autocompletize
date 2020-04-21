@@ -70,20 +70,22 @@ class Form {
   shift: boolean
   timeId: number
 
-  constructor (target:HTMLInputElement){
-    if (new.target !== Form){throw 'Form() must be called with new'}
+  constructor (target:HTMLInputElement) {
+    if (new.target !== Form) { throw new Error('Form() must be called with new') }
     this.target = target
     this.selected = -1
     this.shift = false
     this.timeId = 0
     this.init()
   }
-  clear (){
+
+  clear () {
     const listBox = this.target.nextElementSibling
     if (listBox) { listBox.remove() }
   }
-  initSync (){
-    console.log('initializing: ',this.target)
+
+  initSync () {
+    console.log('initializing: ', this.target)
     const input = this.target
     const selectDown = (e:KeyboardEvent) => {
       if (input && input.nextElementSibling) {
@@ -124,7 +126,7 @@ class Form {
     /* resizeObserver */
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
-        console.log('resize: ',entry.target)
+        console.log('resize: ', entry.target)
         inputWrapper.removeAttribute('style')
         inputWrapper.setAttribute('style', `width:${(input as HTMLInputElement).offsetWidth}px`)
       }
@@ -180,12 +182,14 @@ class Form {
         console.log(this.selected)
       }
     })
-    console.log('initialized: ',this.target)
+    console.log('initialized: ', this.target)
   }
-  init (){
+
+  init () {
     asyncFunc(() => this.initSync())
   }
-  updateSync (data:Array<string>){
+
+  updateSync (data:Array<string>) {
     this.clear()
     const input = this.target
     if (data.length) {
@@ -209,14 +213,16 @@ class Form {
       this.clear()
     }
   }
-  update (data:Array<string>){
+
+  update (data:Array<string>) {
     asyncFunc(() => this.updateSync(data))
   }
-  observe ():Promise<string>{
+
+  observe ():Promise<string> {
     return new Promise((resolve) => {
       const input = this.target
       const prevValue = input.value
-      if (this.timeId){
+      if (this.timeId) {
         window.clearTimeout(this.timeId)
         this.timeId = 0
       }
@@ -229,8 +235,9 @@ class Form {
       }, 600)
     })
   }
-  async changed (func:(res?: string) => void){
-    const res = await this.observe().catch(err => {throw new Error(err)})
+
+  async changed (func:(res?: string) => void) {
+    const res = await this.observe().catch(err => { throw new Error(err) })
     await asyncFunc(() => func(res))
     this.changed(func)
   }
