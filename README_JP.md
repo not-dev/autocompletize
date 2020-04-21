@@ -8,7 +8,7 @@ HTMLのプレーンなinputフォームから、オートコンプリート付�
 
 ## インストール
 
-Releaseからautocompletize.zipをダウンロードして、解凍して自分のプロジェクトに配置してください。
+ReleaseからPackege.zipをダウンロードして、解凍して自分のプロジェクトに配置してください。
 
 * autocompletize~.min.js: プログラムの本体です
 * mod/ekiapi~.min.js: サンプルに使用している、駅すぱあとAPIから駅名のリストを取得するモジュールです
