@@ -1,7 +1,7 @@
 {
   "name": "autocompletize",
   "version": "1.0.1",
-  "description": "",
+  "description": "Make autocomplete form from plain HTML text input form.",
   "license": "MIT",
   "repository": {},
   "dependencies": {

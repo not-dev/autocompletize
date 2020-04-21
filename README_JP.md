@@ -69,6 +69,17 @@ target.addEventListener('input', () => {
 })
 ```
 
+## API
+
+* Constructor
+    + autocompletize.Form(target: HTMLInputElement)
+        - Form initialization
+* Attributes
+    + Form.changed(func:(res?: string) => void)
+        - Observe form updates and execute function
+    + Form.update(data:Array\<string>)
+        - Update autocomplete datalist
+
 ## ライセンス
 
 * コード: MIT License
