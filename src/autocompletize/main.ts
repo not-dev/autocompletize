@@ -56,23 +56,6 @@ const closeState = css({
   }
 })
 
-const resizeObserver = new ResizeObserver(entries => {
-  for (const entry of entries) {
-    console.log(`resizeC: ${entry.target.outerHTML}`)
-    const parent = entry.target.parentElement
-    parent && parent.setAttribute('style', `width:${(entry.target as HTMLInputElement).offsetWidth}px`)
-  }
-})
-const resizeWrapperObserver = new ResizeObserver(entries => {
-  for (const entry of entries) {
-    console.log(`resizeP: ${entry.target.outerHTML}`)
-    const children = Array.from(entry.target.getElementsByClassName(wrapperStyles))
-    for (const child of children){
-      child && child.removeAttribute('style')
-    }
-  }
-})
-
 class Form {
   target: HTMLInputElement
   selected: number
@@ -131,8 +114,14 @@ class Form {
     parent.insertBefore(inputWrapper, input)
     inputWrapper.appendChild(input)
     /* resizeObserver */
-    resizeObserver.observe(input)
-    inputWrapper.parentElement && resizeWrapperObserver.observe(inputWrapper.parentElement)
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        console.log(`resizeP: ${entry.target.outerHTML}`)
+        inputWrapper.removeAttribute('style')
+        inputWrapper.setAttribute('style', `width:${(input as HTMLInputElement).offsetWidth}px`)
+      }
+    })
+    inputWrapper.parentElement && resizeObserver.observe(inputWrapper.parentElement)
     /* addEventListener */
     document.documentElement.addEventListener('click', (e:MouseEvent) => {
       (<HTMLElement>e.target).parentNode === inputWrapper
