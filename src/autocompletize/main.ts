@@ -208,7 +208,7 @@ class Form {
       window.setTimeout(() => resolve(this.updateSync(data)))
     })
   }
-  observe (){
+  observe ():Promise<string>{
     const input = this.target
     return new Promise((resolve) => {
       const prevValue = input.value
@@ -225,7 +225,7 @@ class Form {
       }, 1000)
     })
   }
-  changed (func:(res:any) => void){
+  changed (func:(res:string) => void){
     this.observe().then((res) => func(res)).then(() => this.changed(func))
   }
 }
