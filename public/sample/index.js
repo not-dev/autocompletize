@@ -6,15 +6,25 @@ const process = {
   }
 }
 
-/* input changed event => api called => autocompletize updated */
 window.addEventListener('load', () => {
-  const target = document.getElementById('eki-input')
+  for (const input of ['eki-input', 'eki-input2']) {
+    const target = document.getElementById(input)
+    console.log(autocompletize)
+    const form = new autocompletize.Form(target)
+    console.log(autocompletize)
+    target.addEventListener('input', async () => {
+      const res = await ekiapi.get(process.env.ekiApiKey, target)
+      form.update(res)
+    })
+    target.addEventListener('focus', () => {
+      ekiapi.get(process.env.ekiApiKey, target)
+        .then((res) => form.update(res))
+    })
+  }
   const submit = document.getElementById('submit')
-  target.addEventListener('input', () => ekiapi.get(process.env.ekiApiKey, target, autocompletize.update))
-  target.addEventListener('focus', () => ekiapi.get(process.env.ekiApiKey, target, autocompletize.update))
   submit.addEventListener('click', () => {
     alert(`
-    Station Name: ${target.value || '未入力'}
+    Station Name: ${document.getElementById('eki-input').value || '未入力'}
     Notes: ${document.getElementsByTagName('input')[1].value || '未入力'}`
     )
   })
