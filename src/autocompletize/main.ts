@@ -56,17 +56,35 @@ const closeState = css({
   }
 })
 
+const resizeObserver = new ResizeObserver(entries => {
+  for (const entry of entries) {
+    console.log(`resizeC: ${entry.target.outerHTML}`)
+    const parent = entry.target.parentElement
+    parent && parent.setAttribute('style', `width:${(entry.target as HTMLInputElement).offsetWidth}px`)
+  }
+})
+const resizeWrapperObserver = new ResizeObserver(entries => {
+  for (const entry of entries) {
+    console.log(`resizeP: ${entry.target.outerHTML}`)
+    const children = Array.from(entry.target.getElementsByClassName(wrapperStyles))
+    for (const child of children){
+      child && child.removeAttribute('style')
+    }
+  }
+})
+
 class Form {
   target: HTMLInputElement
-  state: number
+  selected: number
   shift: boolean
-  runObserve: boolean
+  timeId: number
 
   constructor (target:HTMLInputElement){
+    if (new.target !== Form){throw 'Form() must be called with new'}
     this.target = target
-    this.state = -1
+    this.selected = -1
     this.shift = false
-    this.runObserve = false
+    this.timeId = 0
     this.init()
   }
   clear (){
@@ -75,107 +93,96 @@ class Form {
   }
   initSync (){
     console.log('initializing')
+    const input = this.target
     const selectDown = (e:KeyboardEvent) => {
-      const input = <HTMLInputElement>e.target
       if (input && input.nextElementSibling) {
         e.preventDefault()
         const listItems = input.nextElementSibling.children
-        if (this.state > -1) { listItems[this.state].classList.remove('active') }
+        if (this.selected >= 0) { listItems[this.selected].classList.remove('active') }
         const length = listItems.length
-        this.state = (this.state === length - 1) ? 0 : this.state + 1
-        listItems[this.state].scrollIntoView({
+        this.selected = (this.selected === length - 1) ? 0 : this.selected + 1
+        listItems[this.selected].scrollIntoView({
           behavior: 'auto',
           block: 'nearest',
           inline: 'nearest'
         })
-        listItems[this.state].classList.add('active')
+        listItems[this.selected].classList.add('active')
       }
     }
     const selectUp = (e:KeyboardEvent) => {
-      const input = <HTMLInputElement>e.target
-      if (input && input.nextElementSibling) {
+      if (input && input.nextElementSibling && (this.selected !== -1)) {
         e.preventDefault()
         const listItems = input.nextElementSibling.children
-        if (this.state > -1) { listItems[this.state].classList.remove('active') }
+        listItems[this.selected].classList.remove('active')
         const length = listItems.length
-        this.state = (this.state === 0) ? length - 1 : this.state - 1
-        listItems[this.state].scrollIntoView({
+        this.selected = (this.selected === 0) ? length - 1 : this.selected - 1
+        listItems[this.selected].scrollIntoView({
           behavior: 'auto',
           block: 'nearest',
           inline: 'nearest'
         })
-        listItems[this.state].classList.add('active')
+        listItems[this.selected].classList.add('active')
       }
     }
-    const resizeObserver = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        console.log(`resize: ${entry.target.outerHTML}`)
-        const parent = entry.target.parentElement
-        parent && parent.setAttribute('style', `width:${(entry.target as HTMLInputElement).offsetWidth}px`)
+    const inputWrapper = document.createElement('div')
+    inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
+    inputWrapper.classList.add(wrapperStyles)
+    const parent = input.parentNode ? input.parentNode : document.body
+    parent.insertBefore(inputWrapper, input)
+    inputWrapper.appendChild(input)
+    /* resizeObserver */
+    resizeObserver.observe(input)
+    inputWrapper.parentElement && resizeWrapperObserver.observe(inputWrapper.parentElement)
+    /* addEventListener */
+    document.documentElement.addEventListener('click', (e:MouseEvent) => {
+      (<HTMLElement>e.target).parentNode === inputWrapper
+        ? input.classList.remove(closeState)
+        : input.classList.add(closeState)
+    })
+    input.addEventListener('keyup', (e:KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        this.shift = false
       }
     })
-    const inputs = document.getElementsByTagName('input')
-    for (const input of Array.from(inputs)) {
-      if (input.type === 'text') {
-        const inputWrapper = document.createElement('div')
-        inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
-        inputWrapper.classList.add(wrapperStyles)
-        inputWrapper.setAttribute('style', `width:${input.clientWidth}px`)
-        const parent = input.parentNode ? input.parentNode : document.body
-        parent.insertBefore(inputWrapper, input)
-        inputWrapper.appendChild(input)
-        resizeObserver.observe(input)
-        document.documentElement.addEventListener('click', (e:MouseEvent) => {
-          (<HTMLElement>e.target).parentNode === inputWrapper
-            ? input.classList.remove(closeState)
-            : input.classList.add(closeState)
-        })
-        input.addEventListener('keyup', (e:KeyboardEvent) => {
-          if (e.key === 'Shift') {
-            this.shift = false
-          }
-        })
-        input.addEventListener('keydown', (e:KeyboardEvent) => {
-          if (e.key === 'Shift') {
-            this.shift = true
-          }
-          if (e.key === 'ArrowDown') {
-            console.log(e.key)
-            selectDown(e)
-            console.log(this.state)
-          } else if (e.key === 'ArrowUp') {
-            console.log(e.key)
-            selectUp(e)
-            console.log(this.state)
-          } else if (e.key === 'Tab') {
-            console.log(e.key)
-            if (this.shift) {
-              console.log('&Shift')
-              selectUp(e)
-            } else {
-              selectDown(e)
-            }
-            console.log(this.state)
-          } else if (e.key === 'Enter') {
-            console.log(e.key)
-            if (input.nextElementSibling && this.state !== -1) {
-              input.value = input.nextElementSibling.children[this.state].innerHTML
-              this.state = -1
-              this.clear()
-            }
-            console.log(this.state)
-          } else if (e.key === 'Escape') {
-            console.log(e.key)
-            if (input.nextElementSibling) {
-              this.state = -1
-              input.classList.add(closeState)
-              input.blur()
-            }
-            console.log(this.state)
-          }
-        })
+    input.addEventListener('keydown', (e:KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        this.shift = true
       }
-    }
+      if (e.key === 'ArrowDown') {
+        console.log(e.key)
+        selectDown(e)
+        console.log(this.selected)
+      } else if (e.key === 'ArrowUp') {
+        console.log(e.key)
+        selectUp(e)
+        console.log(this.selected)
+      } else if (e.key === 'Tab') {
+        console.log(e.key)
+        if (this.shift) {
+          console.log('&Shift')
+          selectUp(e)
+        } else {
+          selectDown(e)
+        }
+        console.log(this.selected)
+      } else if (e.key === 'Enter') {
+        console.log(e.key)
+        if (input.nextElementSibling && this.selected !== -1) {
+          input.value = input.nextElementSibling.children[this.selected].innerHTML
+          this.selected = -1
+          this.clear()
+        }
+        console.log(this.selected)
+      } else if (e.key === 'Escape') {
+        console.log(e.key)
+        if (input.nextElementSibling) {
+          this.selected = -1
+          input.classList.add(closeState)
+          input.blur()
+        }
+        console.log(this.selected)
+      }
+    })
     console.log('initialized')
   }
   init (){
@@ -185,19 +192,20 @@ class Form {
   }
   updateSync (data:Array<string>){
     this.clear()
+    const input = this.target
     if (data.length) {
-      const inputWrapper = this.target.parentNode
+      const inputWrapper = input.parentNode
       if (inputWrapper) {
         const listBox = document.createElement('div')
-        listBox.id = (this.target.id || this.target.name) && `${this.target.id || this.target.name}-listBox`
+        listBox.id = (input.id || input.name) && `${input.id || input.name}-listBox`
         listBox.classList.add(listBoxStyles)
         inputWrapper.appendChild(listBox)
         for (const item of data) {
           const listItem = document.createElement('div')
           listItem.innerHTML = item
           listItem.addEventListener('click', (e:MouseEvent) => {
-            this.target.value = (e.target as HTMLElement).innerHTML
-            this.target.classList.add(closeState)
+            input.value = (e.target as HTMLElement).innerHTML
+            input.classList.add(closeState)
           })
           listBox.appendChild(listItem)
         }
@@ -211,7 +219,26 @@ class Form {
       window.setTimeout(() => resolve(this.updateSync(data)))
     })
   }
-
+  observe (){
+    const input = this.target
+    return new Promise((resolve) => {
+      const prevValue = input.value
+      if (this.timeId){
+        window.clearTimeout(this.timeId)
+        this.timeId = 0
+      }
+      this.timeId = window.setInterval(() => {
+        console.log('observer:', this.timeId)
+        if (input.value !== prevValue) {
+          window.clearTimeout(this.timeId)
+          resolve(input.value)
+        }
+      }, 1000)
+    })
+  }
+  changed (func:(res:any) => void){
+    this.observe().then((res) => func(res)).then(() => this.changed(func))
+  }
 }
 
 export default Form
