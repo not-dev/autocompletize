@@ -17,6 +17,7 @@
 *.old
 *.tmp
 build/
+temp/
 
 # Logs
 logs

@@ -19,8 +19,9 @@
     <input id="input" type="text" autocomplete="off" />
     <script>
       const target = document.getElementById('input')
+      const form = new autocompletize.Form(target)
       const data = ['fish', 'chicken', 'beef', 'pork', 'cheese', 'patties', 'pickles']
-      target.addEventListener('focus', () => autocompletize.update({ target: target, data: data }))
+      target.addEventListener('focus', () => form.update(data))
     </script>
   </div>
 </body>

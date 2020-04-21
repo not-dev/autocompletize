@@ -1,10 +1,13 @@
 /*! Be licensed under the terms of the MIT license. */
 
-import { css } from 'emotion' /* MIT LICENSE */
+import { css } from 'emotion' /*! MIT LICENSE */
 
-interface autocompletizeDatalist {
-  target: HTMLInputElement;
-  data: Array<string>;
+const asyncFunc = (func:(...args:any) => any) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve)
+  })
+    .then(func)
+    .catch(err => console.error(err))
 }
 
 const wrapperStyles = css({
@@ -61,149 +64,176 @@ const closeState = css({
   }
 })
 
-const autocompletize = {
-  state: -1,
-  shift: false,
-  init: () => {
-    console.log('initializing')
+class Form {
+  target: HTMLInputElement
+  selected: number
+  shift: boolean
+  timeId: number
+
+  constructor (target:HTMLInputElement){
+    if (new.target !== Form){throw 'Form() must be called with new'}
+    this.target = target
+    this.selected = -1
+    this.shift = false
+    this.timeId = 0
+    this.init()
+  }
+  clear (){
+    const listBox = this.target.nextElementSibling
+    if (listBox) { listBox.remove() }
+  }
+  initSync (){
+    console.log('initializing: ',this.target)
+    const input = this.target
     const selectDown = (e:KeyboardEvent) => {
-      const input = <HTMLInputElement>e.target
       if (input && input.nextElementSibling) {
         e.preventDefault()
-        let state = autocompletize.state
         const listItems = input.nextElementSibling.children
-        if (state > -1) { listItems[state].classList.remove('active') }
+        if (this.selected >= 0) { listItems[this.selected].classList.remove('active') }
         const length = listItems.length
-        state = (state === length - 1) ? 0 : state + 1
-        listItems[state].scrollIntoView({
+        this.selected = (this.selected === length - 1) ? 0 : this.selected + 1
+        listItems[this.selected].scrollIntoView({
           behavior: 'auto',
           block: 'nearest',
           inline: 'nearest'
         })
-        listItems[state].classList.add('active')
-        autocompletize.state = state
+        listItems[this.selected].classList.add('active')
       }
     }
     const selectUp = (e:KeyboardEvent) => {
-      const input = <HTMLInputElement>e.target
-      if (input && input.nextElementSibling) {
+      if (input && input.nextElementSibling && (this.selected !== -1)) {
         e.preventDefault()
-        let state = autocompletize.state
         const listItems = input.nextElementSibling.children
-        if (state > -1) { listItems[state].classList.remove('active') }
+        listItems[this.selected].classList.remove('active')
         const length = listItems.length
-        state = (state === 0) ? length - 1 : state - 1
-        listItems[state].scrollIntoView({
+        this.selected = (this.selected === 0) ? length - 1 : this.selected - 1
+        listItems[this.selected].scrollIntoView({
           behavior: 'auto',
           block: 'nearest',
           inline: 'nearest'
         })
-        listItems[state].classList.add('active')
-        autocompletize.state = state
+        listItems[this.selected].classList.add('active')
       }
     }
+    const inputWrapper = document.createElement('div')
+    inputWrapper.id = `${input.id || input.name || Math.random().toString(32).substring(2)}-wrapper`
+    inputWrapper.classList.add(wrapperStyles)
+    const parent = input.parentNode ? input.parentNode : document.body
+    parent.insertBefore(inputWrapper, input)
+    inputWrapper.appendChild(input)
+    /* resizeObserver */
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
-        console.log(`resize: ${entry.target.outerHTML}`)
-        const parent = entry.target.parentElement
-        parent && parent.setAttribute('style', `width:${(entry.target as HTMLInputElement).offsetWidth}px`)
+        console.log('resize: ',entry.target)
+        inputWrapper.removeAttribute('style')
+        inputWrapper.setAttribute('style', `width:${(input as HTMLInputElement).offsetWidth}px`)
       }
     })
-    const inputs = document.getElementsByTagName('input')
-    for (const input of Array.from(inputs)) {
-      if (input.type === 'text') {
-        const inputWrapper = document.createElement('div')
-        inputWrapper.id = (input.id || input.name) && `${input.id || input.name}-wrapper`
-        inputWrapper.classList.add(wrapperStyles)
-        inputWrapper.setAttribute('style', `width:${input.clientWidth}px`)
-        const parent = input.parentNode ? input.parentNode : document.body
-        parent.insertBefore(inputWrapper, input)
-        inputWrapper.appendChild(input)
-        document.documentElement.addEventListener('click', (e:MouseEvent) => {
-          (<HTMLElement>e.target).parentNode === inputWrapper
-            ? input.classList.remove(closeState)
-            : input.classList.add(closeState)
-        })
-        resizeObserver.observe(input)
-        input.addEventListener('keyup', (e:KeyboardEvent) => {
-          if (e.key === 'Shift') {
-            autocompletize.shift = false
-          }
-        })
-        input.addEventListener('keydown', (e:KeyboardEvent) => {
-          if (e.key === 'Shift') {
-            autocompletize.shift = true
-          }
-          if (e.key === 'ArrowDown') {
-            console.log(e.key)
-            selectDown(e)
-            console.log(autocompletize.state)
-          } else if (e.key === 'ArrowUp') {
-            console.log(e.key)
-            selectUp(e)
-            console.log(autocompletize.state)
-          } else if (e.key === 'Tab') {
-            console.log(e.key)
-            if (autocompletize.shift) {
-              console.log('&Shift')
-              selectUp(e)
-            } else {
-              selectDown(e)
-            }
-            console.log(autocompletize.state)
-          } else if (e.key === 'Enter') {
-            console.log(e.key)
-            if (input.nextElementSibling && autocompletize.state !== -1) {
-              input.value = input.nextElementSibling.children[autocompletize.state].innerHTML
-              autocompletize.state = -1
-              autocompletize.clear(input)
-            }
-            console.log(autocompletize.state)
-          } else if (e.key === 'Escape') {
-            console.log(e.key)
-            if (input.nextElementSibling) {
-              autocompletize.state = -1
-              input.classList.add(closeState)
-              input.blur()
-            }
-            console.log(autocompletize.state)
-          }
-        })
+    inputWrapper.parentElement && resizeObserver.observe(inputWrapper.parentElement)
+    /* addEventListener */
+    document.documentElement.addEventListener('click', (e:MouseEvent) => {
+      (<HTMLElement>e.target).parentNode === inputWrapper
+        ? input.classList.remove(closeState)
+        : input.classList.add(closeState)
+    })
+    input.addEventListener('keyup', (e:KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        this.shift = false
       }
-    }
-    console.log('initialized')
-  },
-  clear: (target:HTMLInputElement) => {
-    const listBox = target.nextElementSibling
-    if (listBox) { listBox.remove() }
-  },
-  update: ({ target, data = [] }:autocompletizeDatalist) => {
-    autocompletize.clear(target)
+    })
+    input.addEventListener('keydown', (e:KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        this.shift = true
+      }
+      if (e.key === 'ArrowDown') {
+        console.log(e.key)
+        selectDown(e)
+        console.log(this.selected)
+      } else if (e.key === 'ArrowUp') {
+        console.log(e.key)
+        selectUp(e)
+        console.log(this.selected)
+      } else if (e.key === 'Tab') {
+        console.log(e.key)
+        if (this.shift) {
+          console.log('&Shift')
+          selectUp(e)
+        } else {
+          selectDown(e)
+        }
+        console.log(this.selected)
+      } else if (e.key === 'Enter') {
+        console.log(e.key)
+        if (input.nextElementSibling && this.selected !== -1) {
+          input.value = input.nextElementSibling.children[this.selected].innerHTML
+          this.selected = -1
+          this.clear()
+        }
+        console.log(this.selected)
+      } else if (e.key === 'Escape') {
+        console.log(e.key)
+        if (input.nextElementSibling) {
+          this.selected = -1
+          input.classList.add(closeState)
+          input.blur()
+        }
+        console.log(this.selected)
+      }
+    })
+    console.log('initialized: ',this.target)
+  }
+  init (){
+    asyncFunc(() => this.initSync())
+  }
+  updateSync (data:Array<string>){
+    this.clear()
+    const input = this.target
     if (data.length) {
-      const inputWrapper = target.parentNode
+      const inputWrapper = input.parentNode
       if (inputWrapper) {
         const listBox = document.createElement('div')
-        listBox.id = (target.id || target.name) && `${target.id || target.name}-listBox`
+        listBox.id = `${input.id || input.name || Math.random().toString(32).substring(2)}-listBox`
         listBox.classList.add(listBoxStyles)
         inputWrapper.appendChild(listBox)
         for (const item of data) {
           const listItem = document.createElement('div')
           listItem.innerHTML = item
           listItem.addEventListener('click', (e:MouseEvent) => {
-            target.value = (e.target as HTMLElement).innerHTML
-            target.classList.add(closeState)
+            input.value = (e.target as HTMLElement).innerHTML
+            input.classList.add(closeState)
           })
           listBox.appendChild(listItem)
         }
       }
     } else {
-      autocompletize.clear(target)
+      this.clear()
     }
+  }
+  update (data:Array<string>){
+    asyncFunc(() => this.updateSync(data))
+  }
+  observe ():Promise<string>{
+    return new Promise((resolve) => {
+      const input = this.target
+      const prevValue = input.value
+      if (this.timeId){
+        window.clearTimeout(this.timeId)
+        this.timeId = 0
+      }
+      this.timeId = window.setInterval(() => {
+        // console.log('observer:', this.timeId)
+        if (input.value !== prevValue) {
+          window.clearTimeout(this.timeId)
+          resolve(input.value)
+        }
+      }, 600)
+    })
+  }
+  async changed (func:(res?: string) => void){
+    const res = await this.observe().catch(err => {throw new Error(err)})
+    await asyncFunc(() => func(res))
+    this.changed(func)
   }
 }
 
-window.addEventListener('load', () => {
-  autocompletize.init()
-})
-
-export default autocompletize
+export default Form

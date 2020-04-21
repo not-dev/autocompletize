@@ -6,9 +6,14 @@
 <body>
   <input id="input" type="text" autocomplete="off" />
   <script>
+    /* Specify the input element to apply autocomplete */
     const target = document.getElementById('input')
+    /* Creates a autocomplete form instance */
+    const form = new autocompletize.Form(target)
+    /* Prepare an array of data */
     const data = ['fish', 'chicken', 'beef', 'pork', 'cheese', 'patties', 'pickles']
-    target.addEventListener('focus', () => autocompletize.update({ target: target, data: data }))
+    /* Update autocomplete when the focus */
+    target.addEventListener('focus', () => form.update(data))
   </script>
 </body>
 

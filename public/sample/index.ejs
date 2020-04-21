@@ -7,7 +7,8 @@
   <link rel="icon" href="">
   <link rel="stylesheet" type="text/css" href="../sample/index.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <% for(const f of htmlWebpackPlugin.files.js){ %><script src="<%= f %>"></script><% } %>
+  <% for(const f of htmlWebpackPlugin.files.js){ %>
+  <script src="<%= f %>"></script><% } %>
   <script src="../sample/index.js"></script>
 </head>
 
@@ -17,8 +18,12 @@
     <form>
       <h1>Form</h1>
       <div class="form-group">
-        <input id="eki-input" type="text" autocomplete="off" />
-        <label for="eki-input" class="control-label">Station Name</label>
+        <input id="eki-from" type="text" autocomplete="off" />
+        <label for="eki-from" class="control-label">Station From</label>
+      </div>
+      <div class="form-group">
+        <input id="eki-to" type="text" autocomplete="off" />
+        <label for="eki-to" class="control-label">Station To</label>
       </div>
       <div class="form-group">
         <input type="text" autocomplete="off" />

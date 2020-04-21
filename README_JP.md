@@ -10,18 +10,17 @@ HTMLのプレーンなinputフォームから、オートコンプリート付�
 
 Releaseからautocompletize.zipをダウンロードして、解凍して自分のプロジェクトに配置してください。
 
-* mod/autocompletize~.min.js: プログラムの本体です
+* autocompletize~.min.js: プログラムの本体です
 * mod/ekiapi~.min.js: サンプルに使用している、駅すぱあとAPIから駅名のリストを取得するモジュールです
-* sample_minimum: 最小構成のサンプルです
-* sample: 一般的な用途を想定したサンプルです
+* sample: サンプルHTMLです
 
 ## 使用方法
 
 ### オートコンプリートの内容固定の場合
 
 1. autocompletize~.min.jsを読み込みます
-1. autocompletize.update({ target, data})の形でオートコンプリートに表示するデータを渡します
-1. targetはHTMLInputElement, dataはArray\<string>です
+1. new autocompletize.Form(target: HTMLInputElement)でフォームの初期化をします。
+1. autocompletize.update(data: Array\<string>)の形でオートコンプリートに表示するデータを渡します
 
 ```html
 <head>
@@ -30,9 +29,14 @@ Releaseからautocompletize.zipをダウンロードして、解凍して自分�
 <body>
   <input id="input" type="text" autocomplete="off" />
   <script>
+    /* Specify the input element to apply autocomplete */
     const target = document.getElementById('input')
+    /* Creates a autocomplete form instance */
+    const form = new autocompletize.Form(target)
+    /* Prepare an array of data */
     const data = ['fish', 'chicken', 'beef', 'pork', 'cheese', 'patties', 'pickles']
-    target.addEventListener('focus', () => autocompletize.update({ target: target, data: data }))
+    /* Update autocomplete when the focus */
+    target.addEventListener('focus', () => form.update(data))
   </script>
 </body>
 ```
@@ -41,15 +45,28 @@ Releaseからautocompletize.zipをダウンロードして、解凍して自分�
 
 1. フォームのinputイベントに対して、入力を取得します
 1. 取得した入力から表示したいデータを生成します(例えば入力 >> API検索 >> 結果のリストを表示)
-1. autocompletize.update({ target, data})の形でオートコンプリートを更新します
+1. autocompletize.update(data: Array\<string>)の形でオートコンプリートを更新します
+1. リアルタイムで変更を監視したい場合、changed()を使用してください
+1. changed()は入力更新時に、入力値を渡して引数の関数を実行します。
 
 ```javascript
-const target = document.getElementById('input')
-axios.get(url, data)
-  .then(res => {
-    const obj = JSON.parse((JSON.stringify(res.data)))
-    autocompletize.update({ target: target, data: obj.hoge })
-  })
+/* Specify the input element to apply autocomplete */
+const target = document.getElementById(input)
+/* Creates a autocomplete form instance */
+const form = new autocompletize.Form(target)
+/*
+  Observe the input of changes and execute the function
+  First argument is form value
+*/
+form.changed((res) => console.log(res))
+/* addEventListener */
+target.addEventListener('input', () => {
+  /* In this example we get a list of station names */
+  ekiapi.get(process.env.ekiApiKey, target)
+  /* Then update form */
+  .then(res => form.update(res))
+  .catch(err => console.error(err))
+})
 ```
 
 ## ライセンス
