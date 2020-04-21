@@ -9,19 +9,25 @@ const process = {
 window.addEventListener('load', () => {
   const inputs = ['eki-from', 'eki-to']
   inputs.map((input) => {
+    /* Specify the input element to apply autocomplete */
     const target = document.getElementById(input)
+    /* Creates a autocomplete form instance */
     const form = new autocompletize.Form(target)
-    form.changed((res) => console.log(res))
-    target.addEventListener('input', () => {
+    /*
+      Observe the input of changes and execute the function
+      First argument is form value
+    */
+    // form.changed((res) => console.log(res))
+    /* addEventListener */
+    const handleEvent = () => {
+      /* In this example we get a list of station names */
       ekiapi.get(process.env.ekiApiKey, target)
+        /* Then update form */
         .then(res => form.update(res))
         .catch(err => console.error(err))
-    })
-    target.addEventListener('focus', () => {
-      ekiapi.get(process.env.ekiApiKey, target)
-        .then(res => form.update(res))
-        .catch(err => console.error(err))
-    })
+    }
+    target.addEventListener('input', handleEvent)
+    target.addEventListener('focus', handleEvent)
   })
   const submit = document.getElementById('submit')
   submit.addEventListener('click', () => {

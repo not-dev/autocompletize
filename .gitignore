@@ -17,7 +17,7 @@
 *.old
 *.tmp
 build/
-private/
+temp/
 
 # Logs
 logs

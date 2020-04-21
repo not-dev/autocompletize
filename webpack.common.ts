@@ -15,7 +15,11 @@ const module: webpack.Configuration = {
     ]
   },
   output: {
-    filename: `mod/[name]-${version}.min.js`,
+    filename: (chunkData) => {
+      return chunkData.chunk.name === 'autocompletize'
+        ? `[name]-${version}.min.js`
+        : `mod/[name]-${version}.min.js`
+    },
     path: `${__dirname}/build`,
     library: '[name]',
     libraryTarget: 'umd'
@@ -32,7 +36,7 @@ const module: webpack.Configuration = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/sample_minimum/check.html',
+      template: './public/sample_minimum/index.html',
       filename: 'sample_minimum/index.html',
       chunks: ['autocompletize'],
       inject: 'head',
