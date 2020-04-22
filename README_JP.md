@@ -1,10 +1,10 @@
 [English](./README.md) / 日本語
 
-<!-- ![](https://) -->
-
 # autocompletize
 
 HTMLのプレーンなinputフォームから、オートコンプリート付きのinputフォームを作成します。
+
+![sample](https://raw.githubusercontent.com/not-dev/autocompletize/master/res/image.png)
 
 ## インストール
 

@@ -4,7 +4,7 @@ English / [日本語](./README_JP.md)
 
 Make autocomplete form from plain HTML text input form.
 
-![sample](https://github.com/not-dev/autocompletize/blob/master/assets/image.png?raw=true)
+![sample](https://raw.githubusercontent.com/not-dev/autocompletize/master/res/image.png)
 
 ## Installation
 
