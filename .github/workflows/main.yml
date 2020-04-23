@@ -28,7 +28,6 @@ jobs:
           cd ./build
           zip -r ../build.zip *
           cd ../
-          find ./build/ -name '*.min.js' | head -n 1 | xargs -i cp {} app.min.js
       - uses: actions/create-release@latest
         id: create_release
         env:
@@ -48,12 +47,3 @@ jobs:
           asset_path: ./build.zip
           asset_name: Package.zip
           asset_content_type: application/zip
-
-      - uses: actions/upload-release-asset@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app.min.js
-          asset_name: $GITHUB_REPOSITORY | cut -d '/' -f2
-          asset_content_type: application/javascript

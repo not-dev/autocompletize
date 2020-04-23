@@ -8,7 +8,7 @@ HTMLのプレーンなinputフォームから、オートコンプリート付�
 
 ## インストール
 
-[Release](https://github.com/not-dev/autocompletize/releases/latest)から~min.jsまたはPackege.zipをダウンロードして、解凍して自分のプロジェクトに配置してください。
+[Release](https://github.com/not-dev/autocompletize/releases/latest)からPackege.zipをダウンロードして、解凍して自分のプロジェクトに配置してください。
 
 ## 使用方法
 
