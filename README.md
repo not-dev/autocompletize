@@ -10,12 +10,6 @@ Make autocomplete form from plain HTML text input form.
 
 Download from [Release](https://github.com/not-dev/autocompletize/releases/latest) and place in your directory.
 
-### Package.zip
-
-* autocompletize~.min.js: This module
-* mod/ekiapi~.min.js: Get a list of station names by using by 駅すぱあとAPI (for sample)
-* others: Samples
-
 ## Usage
 
 See the sample in the Package.zip.

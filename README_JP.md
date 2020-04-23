@@ -10,12 +10,6 @@ HTMLのプレーンなinputフォームから、オートコンプリート付�
 
 [Release](https://github.com/not-dev/autocompletize/releases/latest)から~min.jsまたはPackege.zipをダウンロードして、解凍して自分のプロジェクトに配置してください。
 
-### Package.zip
-
-* autocompletize~.min.js: プログラムの本体です
-* mod/ekiapi~.min.js: サンプルに使用している、駅すぱあとAPIから駅名のリストを取得するモジュールです
-* sample: サンプルHTMLです
-
 ## 使用方法
 
 * Package.zipのサンプルも参考にしてください。
