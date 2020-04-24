@@ -4,7 +4,7 @@
 
 HTMLのプレーンなinputフォームから、オートコンプリート付きのinputフォームを作成します。
 
-![sample](https://raw.githubusercontent.com/not-dev/autocompletize/master/res/image.png)
+![sample](./res/image.png)
 
 ## インストール
 
