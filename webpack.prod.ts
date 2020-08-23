@@ -18,18 +18,22 @@ const module: webpack.Configuration = merge(common, {
     ]
   },
   plugins: [
-    new CopyPlugin([
-      {
-        from: 'public',
-        ignore: ['**/*.ejs']
-      },
-      {
-        from: 'README.md'
-      },
-      {
-        from: 'README_JP.md'
-      }
-    ])
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'public',
+          globOptions: {
+            ignore: ['**/*.ejs']
+          }
+        },
+        {
+          from: 'README.md'
+        },
+        {
+          from: 'README_JP.md'
+        }
+      ]
+    })
   ]
 })
 
